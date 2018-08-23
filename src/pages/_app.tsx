@@ -9,16 +9,25 @@ interface Props {
 }
 
 class MyApp extends App<Props> {
+
+  static async getInitialProps ({ Component, ctx }) {
+    const pageProps = (Component.getInitialProps())
+      ? await Component.getInitialProps(ctx)
+      : {}
+    return { pageProps }
+  }
+
   render () {
-    const { Component, store } = this.props
+    const { Component, pageProps, store } = this.props
     return (
       <Container>
         <Provider store={store}>
-          <Component/>
+          <Component {...pageProps} />
         </Provider>
       </Container>
     )
   }
+
 }
 
 export default withReduxSaga(MyApp)
