@@ -11,7 +11,7 @@ interface Props {
 class MyApp extends App<Props> {
 
   static async getInitialProps ({ Component, ctx }) {
-    const pageProps = (Component.getInitialProps())
+    const pageProps = (Component.getInitialProps)
       ? await Component.getInitialProps(ctx)
       : {}
     return { pageProps }
