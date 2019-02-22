@@ -1,7 +1,38 @@
 import * as React from 'react'
 import Document, { Head, Main, NextScript } from 'next/document'
+import flush from 'styled-jsx/server'
 
 export default class MyDocument extends Document {
+
+  static getInitialProps (ctx: any) {
+    let pageContext: any
+    const page = ctx.renderPage((Component: any) => {
+      return (props: any) => {
+        pageContext = props.pageContext
+        return <Component {...props}/>
+      }
+    })
+
+    let css = ''
+    if (pageContext) {
+      css = pageContext.sheetsRegistry.toString()
+    }
+
+    return {
+      ...page,
+      pageContext,
+      styles: (
+        <>
+          <style
+            id='jss-server-side'
+            dangerouslySetInnerHTML={{ __html: css }}
+          />
+          {flush() || null}
+        </>
+      )
+    }
+  }
+
   render () {
     return (
       <html>
@@ -18,4 +49,5 @@ export default class MyDocument extends Document {
       </html>
     )
   }
+
 }
