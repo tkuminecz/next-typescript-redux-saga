@@ -1,11 +1,14 @@
+import '#/static/styles/global.scss'
 import * as React from 'react'
 import App, { Container } from 'next/app'
-import { Provider } from 'react-redux'
-import { withReduxSaga } from '#/redux/store'
-import '#/static/styles/global.scss'
+import { AnyAction, Store } from 'redux'
+import { AppState, configureStore } from '#/redux'
+import { Provider as ReduxProvider } from 'react-redux'
+import withRedux from 'next-redux-wrapper'
+import withReduxSaga from 'next-redux-saga'
 
 interface Props {
-  store: any
+  store: Store<AppState, AnyAction>
 }
 
 class MyApp extends App<Props> {
@@ -21,13 +24,13 @@ class MyApp extends App<Props> {
     const { Component, pageProps, store } = this.props
     return (
       <Container>
-        <Provider store={store}>
+        <ReduxProvider store={store}>
           <Component {...pageProps} />
-        </Provider>
+        </ReduxProvider>
       </Container>
     )
   }
 
 }
 
-export default withReduxSaga(MyApp)
+export default withRedux(configureStore, { debug: false })(withReduxSaga(MyApp))
